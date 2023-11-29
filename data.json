@@ -1,0 +1,106 @@
+{
+    "organization": {
+        "name": "Sample Organization",
+        "teams": [
+            {
+                "teamName": "Team Alpha",
+                "members": [
+                    {
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "john.doe@email.com",
+                        "startDate": "2021-01-01",
+                        "isTeamLead": true
+                    },
+                    {
+                        "firstName": "Jane",
+                        "lastName": "Smith",
+                        "email": "jane.smith@email.com",
+                        "startDate": "2021-02-15",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Alice",
+                        "lastName": "Johnson",
+                        "email": "alice.johnson@email.com",
+                        "startDate": "2021-03-10",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Bob",
+                        "lastName": "Brown",
+                        "email": "bob.brown@email.com",
+                        "startDate": "2021-04-05",
+                        "isTeamLead": false
+                    }
+                ]
+            },
+            {
+                "teamName": "Team Beta",
+                "members": [
+                    {
+                        "firstName": "Charlie",
+                        "lastName": "Davis",
+                        "email": "charlie.davis@email.com",
+                        "startDate": "2021-05-05",
+                        "isTeamLead": true
+                    },
+                    {
+                        "firstName": "Diana",
+                        "lastName": "Evans",
+                        "email": "diana.evans@email.com",
+                        "startDate": "2021-06-06",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Eva",
+                        "lastName": "Foster",
+                        "email": "eva.foster@email.com",
+                        "startDate": "2021-07-07",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Frank",
+                        "lastName": "Green",
+                        "email": "frank.green@email.com",
+                        "startDate": "2021-08-08",
+                        "isTeamLead": false
+                    }
+                ]
+            },
+            {
+                "teamName": "Team Gamma",
+                "members": [
+                    {
+                        "firstName": "Grace",
+                        "lastName": "Harris",
+                        "email": "grace.harris@email.com",
+                        "startDate": "2021-09-09",
+                        "isTeamLead": true
+                    },
+                    {
+                        "firstName": "Harry",
+                        "lastName": "Isaac",
+                        "email": "harry.isaac@email.com",
+                        "startDate": "2021-10-10",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Ivy",
+                        "lastName": "Jones",
+                        "email": "ivy.jones@email.com",
+                        "startDate": "2021-11-11",
+                        "isTeamLead": false
+                    },
+                    {
+                        "firstName": "Jack",
+                        "lastName": "King",
+                        "email": "jack.king@email.com",
+                        "startDate": "2021-12-12",
+                        "isTeamLead": false
+                    }
+                ]
+            }
+        ]
+    }
+}
