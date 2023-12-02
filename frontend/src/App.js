@@ -1,176 +1,68 @@
-import React, { useMemo, useState, useEffect } from "react";
-import {
-	BrowserRouter as Router,
-	Routes,
-	Switch,
-	Route,
-	Link,
-	useParams,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Spinner from "./components/Spinner";
-import organizationService from "./services/organizationService";
-import { teamNameFormatter, getTeamId } from "./utils";
-
-const Home = () => {
-	return <h1 className="text-3xl font-bold text-blue-500">Home</h1>;
-};
-
-const Team = ({ organization }) => {
-	const { teamId } = useParams();
-	const teamMembers = organization.teams.find(
-		(team) => getTeamId(team.teamName) === teamId
-	).members;
-	return <h1 className="text-3xl font-bold text-blue-500">Team</h1>;
-};
+import Layout from "./components/Layout";
+import useOrganizationData from "./hooks/useOrganizationData";
+import {
+	HomePage,
+	TeamPage,
+	MemberPage,
+	TeamRedirectPage,
+	MemberRedirectPage,
+} from "./pages";
 
 export default function App() {
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState({ isError: false, message: "" });
-	const [organization, setOrganization] = useState(null);
+	const { organization, loading, error } = useOrganizationData();
 
-	// const organizationService = useMemo(() => createOrganizationService(), []);
-
-	useEffect(() => {
-		let mounted = true;
-		const fetchData = async () => {
-			setLoading(true);
-			try {
-				const data = await organizationService.getOrganization();
-				console.log("data", data);
-				if (mounted) {
-					setOrganization(data.organization);
-					setLoading(false);
-				}
-			} catch (error) {
-				console.log("error", error);
-				setError({ isError: true, message: error.message });
-				setLoading(false);
-			}
-		};
-
-		fetchData();
-		return () => {
-			mounted = false;
-		};
-	}, []);
-
-	console.log("loading", loading);
 	if (loading) {
-		return <Spinner />;
+		return (
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+				<Spinner className="w-16 h-16" />
+			</div>
+		);
 	}
 
-	console.log("error.isError", error.isError);
-
-	if (error.isError) {
+	if (error) {
 		return (
-			<h1 className="text-3xl font-bold text-red-500">
-				{/* copilot for the default error message */}
-				{error.message ?? "An error occurred!"}
-			</h1>
+			<h1 className="text-3xl font-bold text-red-500">An error occurred</h1>
 		);
 	}
 
 	return (
-		<>
-			<Router>
+		<Router>
+			<Layout name={organization.name}>
 				<Routes>
-					<Route path="/" element={<Home />} />
+					<Route
+						path="/"
+						element={
+							<HomePage
+								organization={organization}
+								loading={loading}
+								error={error}
+							/>
+						}
+					/>
+					{/* /team will redirect to home for simplicities sake */}
+					<Route path="/team" element={<TeamRedirectPage />} />
 					<Route
 						path="/team/:teamId"
-						element={<Team organization={organization} />}
+						element={
+							<TeamPage
+								organization={organization}
+								loading={loading}
+								error={error}
+							/>
+						}
 					/>
-				</Routes>
-
-				<h1 className="text-3xl font-bold text-blue-500">
-					{organization.name}
-				</h1>
-
-				{/* <Routes>
-				{organization.teams.map((team) => (
+					{/* /team/:teamId/member will redirect to /team/:teamId for simplicities sake */}
+					<Route path="/team/:teamId/member" element={<MemberRedirectPage />} />
 					<Route
-						path={`/${teamNameFormatter(team.teamName)}`}
-						// element={<Team team={team} />}
-						element={<div>{team.teamName}</div>}
-						key={team.teamName}
+						path="/team/:teamId/member/:memberId"
+						element={<MemberPage />}
 					/>
-				))}
-			</Routes> */}
-
-				{/* <Route path="/" element={<Home />} />
-			<Route path="/books" element={<BookList />} /> */}
-				{/* <nav>
-					<ul>
-						<li>
-							<Link to="/">Home</Link>
-						</li>
-						{organization.teams.map(({ teamName }) => (
-							<li key={teamNameFormatter(teamName)}>
-								<Link to={`/${teamNameFormatter(teamName)}`}>
-									{teamNameFormatter(teamName, false)}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</nav> */}
-				{/* 
-			<h1 className="text-3xl font-bold text-blue-500">{organization.name}</h1>
-
-			<div className="flex flex-wrap justify-center items-center">
-				{organization.teams.map((team) => (
-					<div
-						key={team.teamName}
-						className="border-2 border-blue-500 rounded-lg p-4 m-4"
-					>
-						<h2 className="text-xl font-bold text-blue-500">
-							{teamNameFormatter(team.teamName, false)}
-						</h2>
-						<div className="flex justify-between items-center">
-							<p className="text-sm text-blue-500">
-								Team Lead:{" "}
-								{team.members.find((member) => member.isTeamLead).firstName}
-							</p>
-							<p className="text-sm text-blue-500">
-								Members: {team.members.length}
-							</p>
-							<Link
-								to={`/${teamNameFormatter(teamNameFormatter(team.teamName))}`}
-								className="text-sm text-blue-500"
-							>
-								See more
-							</Link>
-						</div>
-					</div>
-				))}
-			</div> */}
-
-				{/* <div className="flex flex-wrap justify-center items-center">
-				{organization.teams.map((team) => (
-					<div
-						key={team.teamName}
-						className="border-2 border-blue-500 rounded-lg p-4 m-4"
-					>
-						<h2 className="text-xl font-bold text-blue-500">{team.name}</h2>
-						<div className="flex justify-center items-center">
-							{team.members.map((member) => (
-								<div
-									key={member.email}
-									className="border-2 border-blue-500 rounded-lg p-4 m-4"
-								>
-									<h3 className="text-lg font-bold text-blue-500">
-										{member.firstName} {member.lastName}
-									</h3>
-									<p className="text-blue-500">{member.email}</p>
-									<p className="text-blue-500">{member.startDate}</p>
-									<p className="text-blue-500">
-										{member.isTeamLead ? "Team Lead" : "Team Member"}
-									</p>
-								</div>
-							))}
-						</div>
-					</div>
-				))}
-			</div> */}
-			</Router>
-		</>
+					<Route path="*" element={<h1>Not Found</h1>} />
+				</Routes>
+			</Layout>
+		</Router>
 	);
 }

@@ -16,9 +16,9 @@ app.use((req, res, next) => {
 
 // Middleware to handle 50% chance of exception
 app.use((req, res, next) => {
-	// if (Math.random() < 0.5) {
-	// 	throw new Error("Something went wrong");
-	// }
+	// 	if (Math.random() < 0.5) {
+	// 		throw new Error("Something went wrong");
+	// 	}
 	next();
 });
 
