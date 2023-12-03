@@ -1,17 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import {
-	capitalize,
-	classNames,
-	formatTeamName,
-	getMemberId,
-	getTeamId,
-} from "../utils";
-import Spinner from "../components/Spinner";
+import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
 import Dropdown from "../components/Dropdown";
 import getTeamValidationErrors from "../getTeamValidationErrors";
 import { InputWithAddOn } from "../components/Input";
 import Alert from "../components/Alert";
+import { ExclamationTriangleIcon } from "../components/Icons";
+import Loader from "../components/Loader";
 
 const ROLES = {
 	TEAM_LEAD: "Team Lead",
@@ -26,8 +21,9 @@ const TeamContainer = ({ children, editing, onSubmit }) => {
 	);
 };
 
-const TeamPage = ({ organization, loading, error, updateTeams }) => {
+const TeamPage = ({ organization, updateTeams }) => {
 	const { teamId } = useParams();
+
 	const navigate = useNavigate();
 
 	const team = useMemo(
@@ -36,6 +32,12 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 			null,
 		[organization, teamId]
 	);
+
+	console.group("teampage");
+	console.log("teamid", teamId);
+	console.log("team", team);
+	console.log("organization?.teams", organization?.teams);
+	console.groupEnd();
 
 	const members = useMemo(
 		() =>
@@ -56,6 +58,9 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 	const [editingTeamName, setEditingTeamName] = useState("");
 	const [editingMembers, setEditingMembers] = useState([]);
 	const [saveStatus, setSaveStatus] = useState(null);
+	const [editMade, setEditMade] = useState(false);
+	const [updating, setUpdating] = useState(false);
+	const [error, setError] = useState(null);
 
 	const startEditing = () => {
 		setSaveStatus(null);
@@ -66,10 +71,13 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 		setEditing(true);
 	};
 
-	const stopEditing = (saveChanges) => {
-		if (saveChanges) {
+	const stopEditing = async (saveChanges) => {
+		if (saveChanges && editMade) {
 			// update state via API call using editingMembers state
-			const updatedTeams = organization.teams.map((team) => ({ ...team }));
+			const updatedTeams = organization.teams.map((team) => ({
+				...team,
+				members: team.members.map((member) => ({ ...member })),
+			}));
 
 			const teamInd = organization.teams.findIndex(
 				(team) => getTeamId(team.teamName) === teamId
@@ -110,35 +118,45 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 			const validationErrors = getTeamValidationErrors(updatedTeams);
 
 			if (validationErrors.length > 0) {
-				console.log("alert props", {
-					success: false,
-					message: validationErrors,
-				});
 				setSaveStatus({ success: false, message: validationErrors });
 				return;
 			}
 
-			// move team members to other teams
-			// editingMembers.forEach((member) => {
-			//     const teamInd
+			setUpdating(true);
+			const { success } = await updateTeams(updatedTeams);
 
-			// updateTeam(teamInd, updatedTeam);
-
-			// updateTeam
-
-			setSaveStatus({ success: true, message: "Team updated successfully" });
-
-			// this could be improved to navigate to the new team page
-			// if (editingTeamName !== teamId) {
-			// 	navigate("/");
-			// }
+			if (success) {
+				// this could be improved to navigate to the new team page
+				const updatedTeamId = getTeamId(updatedTeamName);
+				if (updatedTeamId !== teamId) {
+					navigate(`/team/${updatedTeamId}`);
+				}
+				setSaveStatus({
+					success: true,
+					message: "Team updated successfully",
+				});
+				setUpdating(false);
+			} else {
+				setError(error);
+				setUpdating(false);
+			}
+		} else {
+			setSaveStatus(null);
 		}
 		setEditing(false);
 		setEditingTeamName("");
 		setEditingMembers([]);
 	};
 
+	const onTeamNameChanged = (e) => {
+		setEditMade(true);
+
+		setEditingTeamName(e.target.value);
+	};
+
 	const onEditingFieldChanged = (memberInd, field, newValue) => {
+		setEditMade(true);
+
 		const updatedEditingMembers = [...editingMembers];
 		updatedEditingMembers[memberInd][field] = newValue;
 		setEditingMembers(updatedEditingMembers);
@@ -156,10 +174,6 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 
 	return (
 		<div>
-			{loading && <Spinner className="mt-4" />}
-			{error && (
-				<h1 className="text-3xl font-bold text-red-500">An error occurred</h1>
-			)}
 			{!team && (
 				<h1 className="text-3xl font-bold text-red-500">Team not found</h1>
 			)}
@@ -184,7 +198,7 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 											id={`${teamId}-team-name`}
 											placeholder="Team Name"
 											value={editingTeamName}
-											onChange={(e) => setEditingTeamName(e.target.value)}
+											onChange={onTeamNameChanged}
 											addOn="Team"
 											required
 										/>
@@ -216,7 +230,7 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 											type="submit"
 											className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
 										>
-											Save
+											{updating ? <Loader /> : "Save"}
 										</button>
 									</div>
 								)}
@@ -255,6 +269,9 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 												>
 													Name
 												</th>
+												<th scope="col" className="sr-only">
+													Errors
+												</th>
 												<th
 													scope="col"
 													className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -287,6 +304,20 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 																{member.email}
 															</div>
 														</div>
+													</td>
+													<td className="whitespace-nowrap py-5 text-sm text-gray-500 w-10">
+														{member.isTeamLead &&
+															getTeamId(member.team) !== teamId && (
+																<div className="inline-block mt-3">
+																	<div className="group relative">
+																		<ExclamationTriangleIcon className="text-yellow-500" />
+																		<div className="pointer-events-none absolute -top-16 left-0 w-56 whitespace-normal text-yellow-800 rounded-lg bg-yellow-50 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+																			Designated Team Leads cannot be transfered
+																			to other teams
+																		</div>
+																	</div>
+																</div>
+															)}
 													</td>
 													<td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
 														{editing && (

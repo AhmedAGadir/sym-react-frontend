@@ -27,6 +27,10 @@ app.use(express.json());
 
 app.get("/get-data", async (req, res) => {
 	try {
+		console.log(
+			"GET REQUEST - sending",
+			theData.organization.teams.map((team) => team.teamName)
+		);
 		res.json(theData);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -35,6 +39,10 @@ app.get("/get-data", async (req, res) => {
 
 app.post("/store-data", (req, res) => {
 	try {
+		console.log(
+			"POST request received",
+			req.body.organization.teams.map((team) => team.teamName)
+		);
 		theData = req.body;
 		res.status(200).json({ message: "Data stored successfully!" });
 	} catch (error) {

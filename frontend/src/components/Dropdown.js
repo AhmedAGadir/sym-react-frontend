@@ -8,7 +8,7 @@ const Dropdown = ({ id, options, onChange }) => {
 			</label>
 			<select
 				id={id}
-				className="block py-2.5 font-medium px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-indigo-500 focus:text-indigo-500"
+				className="block py-2.5 font-medium px-0 w-full flex-1 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-indigo-500 focus:text-indigo-500"
 				// className="pl-2 block min-w-0 w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
 				onChange={onChange}
 				value={options.find((option) => option.selected).value}

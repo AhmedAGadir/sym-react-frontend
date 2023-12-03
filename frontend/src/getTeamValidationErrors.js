@@ -1,17 +1,16 @@
-// good to extract this code so it can be tested
 const getTeamValidationErrors = (teamData) => {
 	const validationErrors = [];
 
 	const uniqueTeamNames = new Set(teamData.map((team) => team.teamName));
 
 	if (uniqueTeamNames.size < teamData.length) {
-		validationErrors.push("Team name already exists");
+		validationErrors.push("A team with this name already exists");
 	}
 
 	const emptyTeams = teamData.filter((team) => team.members.length === 0);
 
 	if (emptyTeams.length > 0) {
-		validationErrors.push("Teams must have at least one member");
+		validationErrors.push("Each team must have at least one member");
 	}
 
 	const teamsWithNoTeamLead = teamData.filter(
@@ -19,7 +18,7 @@ const getTeamValidationErrors = (teamData) => {
 	);
 
 	if (teamsWithNoTeamLead.length > 0) {
-		validationErrors.push("Teams must have a team lead");
+		validationErrors.push("Each team must have a designated Team Lead");
 	}
 
 	const teamsWithMultipleTeamLeads = teamData.filter(
@@ -27,7 +26,9 @@ const getTeamValidationErrors = (teamData) => {
 	);
 
 	if (teamsWithMultipleTeamLeads.length > 0) {
-		validationErrors.push("Teams can only have one team lead");
+		validationErrors.push(
+			"Designated Team Leads cannot be transfered to other teams"
+		);
 	}
 
 	return validationErrors;

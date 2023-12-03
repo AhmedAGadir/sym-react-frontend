@@ -17,7 +17,7 @@ export default function App() {
 	if (loading) {
 		return (
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-				<Spinner className="w-16 h-16" />
+				<Spinner className="!w-16 !h-16" />
 			</div>
 		);
 	}
@@ -35,17 +35,7 @@ export default function App() {
 					<Route
 						path="/"
 						element={
-							// i decided to pass the organization, loading and error props to the page components
-							// this is faster than having each page component call the useOrganizationData hook
-							// as the API call is only made once
-							// however i understand that as the organization grows in size,
-							// this may not be the best solution
-							<HomePage
-								organization={organization}
-								loading={loading}
-								error={error}
-								updateTeams={updateTeams}
-							/>
+							<HomePage organization={organization} updateTeams={updateTeams} />
 						}
 					/>
 					{/* /team will redirect to home for simplicities sake */}
@@ -53,11 +43,7 @@ export default function App() {
 					<Route
 						path="/team/:teamId"
 						element={
-							<TeamPage
-								organization={organization}
-								loading={loading}
-								error={error}
-							/>
+							<TeamPage organization={organization} updateTeams={updateTeams} />
 						}
 					/>
 					{/* /team/:teamId/member will redirect to /team/:teamId for simplicities sake */}
