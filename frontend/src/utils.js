@@ -14,3 +14,5 @@ export const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 // * copilot
 export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+export const isNotEmptyString = (str) => str !== "";

@@ -1,3 +1,11 @@
 
 - could give teams, members ID's, will think about this (problem with persistence)
 - could sanitize/validate breadcrumb component 
+
+- teams need an id, for mapping purposes - cant use 
+
+- team not found error handling
+- saving and cancelling edits - requires saving editing state, 
+    ive kept this out for simplicities sake
+- persisting state 
+

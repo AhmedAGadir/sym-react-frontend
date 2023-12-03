@@ -28,7 +28,6 @@ const BreadCrumb = ({ pages }) => {
 								)}
 								aria-current={page.current ? "page" : undefined}
 							>
-								{/* split any hyphens and then join with spaces and capitalise*/}
 								{page.name.split("-").map(capitalize).join(" ")}
 							</Link>
 						</div>

@@ -4,6 +4,9 @@ import BreadCrumb from "./BreadCrumb";
 import { BellIcon } from "./Icons";
 import { capitalize } from "../utils";
 import { useLocation } from "react-router-dom";
+import { isNotEmptyString } from "../utils";
+
+const INVALID_ROUTES = ["team", "member"];
 
 const user = {
 	name: "Ahmed Gadir",
@@ -11,13 +14,10 @@ const user = {
 	imageSrc: avatar,
 };
 
-const INVALID_ROUTES = ["team", "member"];
-
 const Layout = ({ name, children }) => {
 	const location = useLocation();
 
-	const allPathnames = location.pathname.split("/");
-	const pathnames = allPathnames.slice(1);
+	const pathnames = location.pathname.split("/").filter(isNotEmptyString);
 
 	const pages =
 		pathnames
@@ -52,19 +52,16 @@ const Layout = ({ name, children }) => {
 										</div>
 									</div>
 									<div className="flex items-center">
-										<button
-											type="button"
-											className="relative rounded-full bg-gray-800 p-1 text-gray-400"
-										>
+										<button className="relative rounded-full bg-gray-800 p-1 text-gray-400">
 											<BellIcon className="h-6 w-6" aria-hidden="true" />
 										</button>
-										<div className="flex-shrink-0 ml-2">
+										<button className="flex-shrink-0 ml-2">
 											<img
 												className="h-8 w-8 rounded-full"
 												src={user.imageSrc}
 												alt="user avatar"
 											/>
-										</div>
+										</button>
 									</div>
 								</div>
 							</div>

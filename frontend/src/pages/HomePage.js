@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import Spinner from "../components/Spinner";
 import { capitalize, teamNameFormatter } from "../utils";
 import { Link } from "react-router-dom";
+import { UsersIcon } from "../components/Icons";
 
 const HomePage = ({ organization, loading, error }) => {
 	const teamsSummary = useMemo(() => {
@@ -9,12 +10,10 @@ const HomePage = ({ organization, loading, error }) => {
 		return organization.teams.map((team) => {
 			const teamName = teamNameFormatter(team.teamName);
 			const teamLead = team.members.find((member) => member.isTeamLead);
-			const teamLeadName = teamLead
-				? `${teamLead.firstName} ${teamLead.lastName}`
-				: null;
 			return {
 				name: capitalize(teamName),
-				lead: teamLeadName,
+				memberCount: team.members.length,
+				lead: `${teamLead.firstName} ${teamLead.lastName}`,
 				href: `/team/${teamName}`,
 			};
 		});
@@ -40,13 +39,19 @@ const HomePage = ({ organization, loading, error }) => {
 									</p>
 								</div>
 								<div className="mt-1 flex items-center gap-x-2 text-sm leading-5 text-gray-500">
-									<p className="truncate">Lead by {team.lead}</p>
+									<p className="truncate">
+										Lead by <span className="text-gray-700">{team.lead}</span>
+									</p>
 								</div>
 							</div>
 							<div className="flex flex-none items-center gap-x-4">
+								<p className="whitespace-nowrap text-gray-500">
+									<UsersIcon className="inline w-4 h-4 mr-1" />
+									<span className="text-sm">{team.memberCount}</span>
+								</p>
 								<Link
 									to={team.href}
-									className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
+									className="rounded-md bg-white px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 								>
 									View Team<span className="sr-only">, {team.name}</span>
 								</Link>

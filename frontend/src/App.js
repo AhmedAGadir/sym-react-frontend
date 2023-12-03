@@ -35,6 +35,11 @@ export default function App() {
 					<Route
 						path="/"
 						element={
+							// i decided to pass the organization, loading and error props to the page components
+							// this is faster than having each page component call the useOrganizationData hook
+							// as the API call is only made once
+							// however i understand that as the organization grows in size,
+							// this may not be the best solution
 							<HomePage
 								organization={organization}
 								loading={loading}
