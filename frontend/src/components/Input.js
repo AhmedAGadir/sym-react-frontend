@@ -1,5 +1,5 @@
 export const InputWithAddOn = ({ placeholder, value, onChange, addOn }) => (
-	<div className="mt-2 flex rounded-md shadow-sm">
+	<div className="mt-2 flex ">
 		<span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
 			{addOn}
 		</span>

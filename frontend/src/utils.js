@@ -8,6 +8,7 @@ export const teamNameFormatter = (str, lowerCase = true) => {
 // *copilot - capitalize each word, rest lowercase
 export const formatTeamNameFromInput = (str) => {
 	const teamName = str
+		.trim()
 		.match(/\b(\w+)/g)
 		.map(capitalize)
 		.join(" ");

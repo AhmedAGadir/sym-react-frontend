@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
 	capitalize,
 	classNames,
@@ -11,9 +11,11 @@ import Spinner from "../components/Spinner";
 import Dropdown from "../components/Dropdown";
 import getTeamValidationErrors from "../getTeamValidationErrors";
 import { InputWithAddOn } from "../components/Input";
+import Alert from "../components/Alert";
 
 const TeamPage = ({ organization, loading, error }) => {
 	const { teamId } = useParams();
+	const navigate = useNavigate();
 
 	const teamNotFound = useMemo(() => {
 		if (!organization) return false;
@@ -36,7 +38,7 @@ const TeamPage = ({ organization, loading, error }) => {
 			})
 			.map((member) => ({
 				...member,
-				team: teamNameFormatter(team.teamName, false),
+				team: team.teamName,
 			}));
 	}, [organization, teamId]);
 
@@ -46,6 +48,8 @@ const TeamPage = ({ organization, loading, error }) => {
 	const [saveStatus, setSaveStatus] = useState(null);
 
 	const startEditing = () => {
+		setSaveStatus(null);
+
 		const membersCopy = members.map((member) => ({ ...member }));
 		setEditingTeamName(capitalize(teamId));
 		setEditingMembers(membersCopy);
@@ -55,7 +59,9 @@ const TeamPage = ({ organization, loading, error }) => {
 	const stopEditing = (saveChanges) => {
 		if (saveChanges) {
 			const editingTeamData = {
-				teamName: formatTeamNameFromInput(editingTeamName),
+				teamName: editingTeamName
+					? formatTeamNameFromInput(editingTeamName)
+					: "",
 				members: editingMembers,
 			};
 			const otherTeamData = organization.teams.filter(
@@ -75,23 +81,21 @@ const TeamPage = ({ organization, loading, error }) => {
 
 			// update state via API call using editingMembers state
 			setSaveStatus({ success: true, message: "Team updated successfully" });
+
+			// this could be improved to navigate to the new team page
+			if (editingTeamName !== teamId) {
+				navigate("/");
+			}
 		}
 		setEditing(false);
 		setEditingTeamName("");
 		setEditingMembers([]);
 	};
 
-	const displayMembers = useMemo(
+	const displayingMembers = useMemo(
 		() => (editing ? editingMembers : members),
 		[editing, editingMembers, members]
 	);
-
-	const allTeams = useMemo(() => {
-		if (!organization) return [];
-		return organization.teams.map((team) =>
-			teamNameFormatter(team.teamName, false)
-		);
-	}, [organization]);
 
 	const onTeamChange = (memberInd, team) => {
 		const updatedMembers = [...editingMembers];
@@ -131,6 +135,7 @@ const TeamPage = ({ organization, loading, error }) => {
 								/>
 							</div>
 						)}
+
 						<div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
 							{!editing && (
 								<button
@@ -158,6 +163,14 @@ const TeamPage = ({ organization, loading, error }) => {
 								</div>
 							)}
 						</div>
+					</div>
+					<div className="mt-3">
+						{saveStatus && (
+							<Alert
+								type={saveStatus.success ? "success" : "danger"}
+								message={saveStatus.message}
+							/>
+						)}
 					</div>
 					<div className="mt-8 flow-root">
 						<div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -193,7 +206,7 @@ const TeamPage = ({ organization, loading, error }) => {
 										</tr>
 									</thead>
 									<tbody className="divide-y divide-gray-200 bg-white">
-										{displayMembers.map((member, memberInd) => (
+										{displayingMembers.map((member, memberInd) => (
 											<tr key={member.email}>
 												<td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
 													<div>
@@ -212,17 +225,19 @@ const TeamPage = ({ organization, loading, error }) => {
 													{editing ? (
 														<Dropdown
 															id={`team-${member.email}`}
-															options={allTeams.map((team) => ({
-																value: team,
-																label: team,
-																selected: team === member.team,
-															}))}
+															options={
+																organization.teams?.map(({ teamName }) => ({
+																	value: teamName,
+																	label: teamNameFormatter(teamName, false),
+																	selected: teamName === member.team,
+																})) ?? []
+															}
 															onChange={(e) =>
 																onTeamChange(memberInd, e.target.value)
 															}
 														/>
 													) : (
-														member.team
+														teamNameFormatter(member.team, false)
 													)}
 												</td>
 												<td className="relative py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">

@@ -11,3 +11,11 @@
 
 - havent handled validating for same member across 
     different teams - its because i havent given id's
+
+- refactor getValidationError to use the hooks, 
+
+- refactor pages or hooks so that we dont have to load everything upon updating
+
+- on changing team name a lot needs to happen - maybe update the current route
+
+// this could be improved to navigate to the new team page

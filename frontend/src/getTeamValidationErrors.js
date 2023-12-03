@@ -1,7 +1,9 @@
+import { teamNameFormatter } from "./utils";
+
 const getTeamValidationErrors = (teamData, otherTeamData) => {
 	const validationErrors = [];
 
-	if (!teamData.teamName) {
+	if (!teamData.teamName || !teamNameFormatter(teamData.teamName)) {
 		validationErrors.push("Team must have a name");
 	}
 
@@ -15,9 +17,7 @@ const getTeamValidationErrors = (teamData, otherTeamData) => {
 
 	const membersLeftInTeam = teamData.members.filter(
 		(member) =>
-			!otherTeamData.some(
-				(otherTeam) => otherTeam.teamName === `Team ${member.team}`
-			)
+			!otherTeamData.some((otherTeam) => otherTeam.teamName === member.team)
 	);
 
 	if (membersLeftInTeam.length === 0) {
