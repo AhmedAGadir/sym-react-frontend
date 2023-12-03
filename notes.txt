@@ -9,3 +9,5 @@
     ive kept this out for simplicities sake
 - persisting state 
 
+- havent handled validating for same member across 
+    different teams - its because i havent given id's

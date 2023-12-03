@@ -3,11 +3,14 @@ import { useParams, Link } from "react-router-dom";
 import {
 	capitalize,
 	classNames,
+	formatTeamNameFromInput,
 	memberNameFormatter,
 	teamNameFormatter,
 } from "../utils";
 import Spinner from "../components/Spinner";
 import Dropdown from "../components/Dropdown";
+import getTeamValidationErrors from "../getTeamValidationErrors";
+import { InputWithAddOn } from "../components/Input";
 
 const TeamPage = ({ organization, loading, error }) => {
 	const { teamId } = useParams();
@@ -38,19 +41,43 @@ const TeamPage = ({ organization, loading, error }) => {
 	}, [organization, teamId]);
 
 	const [editing, setEditing] = useState(false);
+	const [editingTeamName, setEditingTeamName] = useState("");
 	const [editingMembers, setEditingMembers] = useState([]);
+	const [saveStatus, setSaveStatus] = useState(null);
 
 	const startEditing = () => {
 		const membersCopy = members.map((member) => ({ ...member }));
+		setEditingTeamName(capitalize(teamId));
 		setEditingMembers(membersCopy);
 		setEditing(true);
 	};
 
 	const stopEditing = (saveChanges) => {
 		if (saveChanges) {
+			const editingTeamData = {
+				teamName: formatTeamNameFromInput(editingTeamName),
+				members: editingMembers,
+			};
+			const otherTeamData = organization.teams.filter(
+				(team) => teamNameFormatter(team.teamName) !== teamId
+			);
+			const validationErrors = getTeamValidationErrors(
+				editingTeamData,
+				otherTeamData
+			);
+
+			console.log("validationErrors", validationErrors);
+
+			if (validationErrors.length > 0) {
+				setSaveStatus({ success: false, message: validationErrors });
+				return;
+			}
+
 			// update state via API call using editingMembers state
+			setSaveStatus({ success: true, message: "Team updated successfully" });
 		}
 		setEditing(false);
+		setEditingTeamName("");
 		setEditingMembers([]);
 	};
 
@@ -59,7 +86,6 @@ const TeamPage = ({ organization, loading, error }) => {
 		[editing, editingMembers, members]
 	);
 
-	// dropdown options for team selection
 	const allTeams = useMemo(() => {
 		if (!organization) return [];
 		return organization.teams.map((team) =>
@@ -85,14 +111,26 @@ const TeamPage = ({ organization, loading, error }) => {
 			{!teamNotFound && organization && (
 				<div className="px-4 sm:px-6 lg:px-8">
 					<div className="sm:flex sm:items-center">
-						<div className="sm:flex-auto">
-							<h1 className="text-base font-semibold leading-6 text-gray-900">
-								Team {capitalize(teamId)}
-							</h1>
-							<p className="mt-2 text-sm text-gray-700">
-								lorem ipsum dolor sit amet consectetur adipisicing elit
-							</p>
-						</div>
+						{!editing && (
+							<div className="sm:flex-auto">
+								<h1 className="text-base font-semibold leading-6 text-gray-900">
+									Team {capitalize(teamId)}
+								</h1>
+								<p className="mt-2 text-sm text-gray-700">
+									lorem ipsum dolor sit amet consectetur adipisicing elit
+								</p>
+							</div>
+						)}
+						{editing && (
+							<div className="sm:flex-auto">
+								<InputWithAddOn
+									placeholder="Team Name"
+									value={editingTeamName}
+									onChange={(e) => setEditingTeamName(e.target.value)}
+									addOn="Team"
+								/>
+							</div>
+						)}
 						<div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
 							{!editing && (
 								<button
@@ -114,7 +152,6 @@ const TeamPage = ({ organization, loading, error }) => {
 									<button
 										onClick={() => stopEditing(true)}
 										className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
-										// 	? " bg-indigo-400 hover:bg-indigo-300 focus-visible:outline-indigo-400"
 									>
 										Save
 									</button>

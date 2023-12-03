@@ -5,6 +5,15 @@ export const teamNameFormatter = (str, lowerCase = true) => {
 	return lowerCase ? teamName.toLowerCase() : teamName;
 };
 
+// *copilot - capitalize each word, rest lowercase
+export const formatTeamNameFromInput = (str) => {
+	const teamName = str
+		.match(/\b(\w+)/g)
+		.map(capitalize)
+		.join(" ");
+	return `Team ${teamName}`;
+};
+
 export const memberNameFormatter = (firstName, lastName) =>
 	`${firstName.toLowerCase()}-${lastName.toLowerCase()}`;
 
