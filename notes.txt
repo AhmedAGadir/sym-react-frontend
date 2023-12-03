@@ -19,3 +19,6 @@
 - on changing team name a lot needs to happen - maybe update the current route
 
 // this could be improved to navigate to the new team page
+
+// if app grew: 
+// edit mode can become more modular - editing name, individual rows etc. 

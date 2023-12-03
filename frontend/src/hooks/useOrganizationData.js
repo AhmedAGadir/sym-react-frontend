@@ -26,9 +26,9 @@ const useOrganizationData = () => {
 		};
 	}, []);
 
-	const updateTeam = async (teamInd, updatedTeam) => {
+	const updateTeams = async (updatedTeams) => {
 		const updatedOrganization = { ...organization };
-		updatedOrganization.teams[teamInd] = updatedTeam;
+		updatedOrganization.teams = updatedTeams;
 
 		setLoading(true);
 		try {
@@ -80,7 +80,7 @@ const useOrganizationData = () => {
 		}
 	};
 
-	return { organization, loading, error, updateTeam, updateMember };
+	return { organization, loading, error, updateTeams, updateMember };
 };
 
 export default useOrganizationData;

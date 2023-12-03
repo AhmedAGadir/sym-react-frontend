@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import Spinner from "../components/Spinner";
-import { capitalize, teamNameFormatter } from "../utils";
+import { capitalize, getTeamId } from "../utils";
 import { Link } from "react-router-dom";
 import { UsersIcon } from "../components/Icons";
 
@@ -8,13 +8,13 @@ const HomePage = ({ organization, loading, error }) => {
 	const teamsSummary = useMemo(() => {
 		if (!organization) return [];
 		return organization.teams.map((team) => {
-			const teamName = teamNameFormatter(team.teamName);
+			const teamId = getTeamId(team.teamName);
 			const teamLead = team.members.find((member) => member.isTeamLead);
 			return {
-				name: capitalize(teamName),
+				name: capitalize(teamId),
 				memberCount: team.members.length,
 				lead: `${teamLead.firstName} ${teamLead.lastName}`,
-				href: `/team/${teamName}`,
+				href: `/team/${teamId}`,
 			};
 		});
 	}, [organization]);

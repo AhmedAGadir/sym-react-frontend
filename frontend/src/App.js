@@ -12,7 +12,7 @@ import {
 } from "./pages";
 
 export default function App() {
-	const { organization, loading, error } = useOrganizationData();
+	const { organization, loading, error, updateTeams } = useOrganizationData();
 
 	if (loading) {
 		return (
@@ -44,6 +44,7 @@ export default function App() {
 								organization={organization}
 								loading={loading}
 								error={error}
+								updateTeams={updateTeams}
 							/>
 						}
 					/>

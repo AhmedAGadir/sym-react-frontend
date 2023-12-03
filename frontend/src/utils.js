@@ -1,16 +1,19 @@
 // ** DATA UTIL METHODS **
 
-export const teamNameFormatter = (str, lowerCase = true) => {
-	const teamName = str.match(/\bTeam (\w+)/)[1];
-	return lowerCase ? teamName.toLowerCase() : teamName;
+export const getTeamId = (teamName) => {
+	if (!teamName) return "";
+	return teamName.match(/\bTeam (\w+)/)[1].toLowerCase();
 };
 
 // *copilot - capitalize each word, rest lowercase
-export const formatTeamNameFromInput = (str) => {
+export const formatTeamName = (str) => {
+	if (!str) return "";
+	// trim, lowercase each word and capitalise
 	const teamName = str
 		.trim()
-		.match(/\b(\w+)/g)
-		.map(capitalize)
+		.toLowerCase()
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
 		.join(" ");
 	return `Team ${teamName}`;
 };

@@ -1,47 +1,20 @@
 import React from "react";
+import { classNames } from "../utils";
 
-const Alert = ({ type, message }) => {
-	switch (type) {
-		case "success":
-			return (
-				<div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50">
-					{message}
-				</div>
-			);
-		case "danger": {
-			if (message.length <= 1) {
-				return (
-					<div
-						className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-						role="alert"
-					>
-						{message[0]}
-					</div>
-				);
-			} else {
-				return (
-					<div
-						className="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-						role="alert"
-					>
-						<span className="sr-only">Danger</span>
-						<div>
-							<span className="font-medium">
-								Ensure that these requirements are met:
-							</span>
-							<ul className="mt-1.5 list-disc list-inside">
-								{message.map((msg) => (
-									<li key={msg}>{msg}</li>
-								))}
-							</ul>
-						</div>
-					</div>
-				);
-			}
-		}
-		default:
-			return null;
-	}
+const alertStyles = {
+	success: "text-green-800 bg-green-50",
+	danger: "text-red-800 bg-red-50",
+};
+
+const Alert = ({ type, children }) => {
+	return (
+		<div
+			className={classNames("p-4 mb-4 text-sm rounded-lg", alertStyles[type])}
+			role="alert"
+		>
+			{children}
+		</div>
+	);
 };
 
 export default Alert;
