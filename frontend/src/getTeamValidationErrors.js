@@ -1,36 +1,32 @@
-import { getTeamId } from "./utils";
-
 // good to extract this code so it can be tested
-const getTeamValidationErrors = (teamData, otherTeamData) => {
+const getTeamValidationErrors = (teamData) => {
 	const validationErrors = [];
 
-	if (!teamData.teamName || !getTeamId(teamData.teamName)) {
-		validationErrors.push("Team must have a name");
-	}
+	const uniqueTeamNames = new Set(teamData.map((team) => team.teamName));
 
-	const teamNameExists = otherTeamData.some(
-		(team) => team.teamName === teamData.teamName
-	);
-
-	if (teamNameExists) {
+	if (uniqueTeamNames.size < teamData.length) {
 		validationErrors.push("Team name already exists");
 	}
 
-	const membersLeftInTeam = teamData.members.filter(
-		(member) =>
-			!otherTeamData.some((otherTeam) => otherTeam.teamName === member.team)
+	const emptyTeams = teamData.filter((team) => team.members.length === 0);
+
+	if (emptyTeams.length > 0) {
+		validationErrors.push("Teams must have at least one member");
+	}
+
+	const teamsWithNoTeamLead = teamData.filter(
+		(team) => !team.members.some((member) => member.isTeamLead)
 	);
 
-	if (membersLeftInTeam.length === 0) {
-		validationErrors.push("This team must have at least one member");
+	if (teamsWithNoTeamLead.length > 0) {
+		validationErrors.push("Teams must have a team lead");
 	}
-	const teamLeadCount = membersLeftInTeam.filter(
-		(member) => member.isTeamLead
-	).length;
 
-	if (teamLeadCount === 0) {
-		validationErrors.push("This team must have a team lead");
-	} else if (teamLeadCount > 1) {
+	const teamsWithMultipleTeamLeads = teamData.filter(
+		(team) => team.members.filter((member) => member.isTeamLead).length > 1
+	);
+
+	if (teamsWithMultipleTeamLeads.length > 0) {
 		validationErrors.push("Teams can only have one team lead");
 	}
 

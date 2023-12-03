@@ -5,21 +5,8 @@ export const getTeamId = (teamName) => {
 	return teamName.match(/\bTeam (\w+)/)[1].toLowerCase();
 };
 
-// *copilot - capitalize each word, rest lowercase
-export const formatTeamName = (str) => {
-	if (!str) return "";
-	// trim, lowercase each word and capitalise
-	const teamName = str
-		.trim()
-		.toLowerCase()
-		.split(" ")
-		.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-		.join(" ");
-	return `Team ${teamName}`;
-};
-
-export const memberNameFormatter = (firstName, lastName) =>
-	`${firstName.toLowerCase()}-${lastName.toLowerCase()}`;
+export const getMemberId = (firstName, lastName) =>
+	`${firstName}-${lastName}`.toLowerCase();
 
 // ** GENERAL UTIL METHODS **
 

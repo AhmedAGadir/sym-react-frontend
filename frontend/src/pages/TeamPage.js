@@ -4,7 +4,7 @@ import {
 	capitalize,
 	classNames,
 	formatTeamName,
-	memberNameFormatter,
+	getMemberId,
 	getTeamId,
 } from "../utils";
 import Spinner from "../components/Spinner";
@@ -68,65 +68,55 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 
 	const stopEditing = (saveChanges) => {
 		if (saveChanges) {
-			// const updatedTeamName = editingTeamName ? `Team ${str
-			//     .trim()
-			//     .match(/\b(\w+)/g)
-			//     .map(capitalize)
-			//     .join(" "}` : "";
-
-			// const editingTeamData = {
-			// 	teamName: formatTeamName(editingTeamName),
-			// 	members: editingMembers,
-			// };
-			// const otherTeamData = organization.teams.filter(
-			// 	(team) => getTeamId(team.teamName) !== teamId
-			// );
-			// const validationErrors = getTeamValidationErrors(
-			// 	editingTeamData,
-			// 	otherTeamData
-			// );
-
-			// if (validationErrors.length > 0) {
-			// 	console.log("alert props", {
-			// 		success: false,
-			// 		message: validationErrors,
-			// 	});
-			// 	setSaveStatus({ success: false, message: validationErrors });
-			// 	return;
-			// }
-
-			// const validation = {
-			//     teamHasName:
-			// };
-			const validationErrors = [];
-
 			// update state via API call using editingMembers state
+			const updatedTeams = organization.teams.map((team) => ({ ...team }));
+
 			const teamInd = organization.teams.findIndex(
 				(team) => getTeamId(team.teamName) === teamId
 			);
-			const updatingTeams = organization.teams.map((team) => ({ ...team }));
-			const updatingEditingTeam = updatingTeams[teamInd];
-			const otherUpdatingTeams = updatingTeams.filter(
-				(_, ind) => ind !== teamInd
+
+			// update team name
+			const updatedTeamName = `Team ${editingTeamName
+				.trim()
+				.match(/\b(\w+)/g)
+				.map(capitalize)
+				.join(" ")}`;
+
+			updatedTeams[teamInd].teamName = updatedTeamName;
+
+			// update team members
+			const updatedTeamMembers = [];
+
+			editingMembers.forEach(
+				({ team: editingMembersTeam, ...restOfEditingMember }) => {
+					if (getTeamId(editingMembersTeam) === teamId) {
+						// remove 'team' property from member and keep in this team
+						updatedTeamMembers.push(restOfEditingMember);
+					} else {
+						// move member to correct team
+						const otherTeamInd = updatedTeams.findIndex(
+							(otherTeam) =>
+								getTeamId(otherTeam.teamName) === getTeamId(editingMembersTeam)
+						);
+						updatedTeams[otherTeamInd].members.push(restOfEditingMember);
+					}
+				}
 			);
 
-			if (!editingTeamName) {
-				validationErrors.push("Team must have a name");
+			updatedTeams[teamInd].members = updatedTeamMembers;
+			console.log("updatedTeams", updatedTeams);
+
+			// validate updated teams
+			const validationErrors = getTeamValidationErrors(updatedTeams);
+
+			if (validationErrors.length > 0) {
+				console.log("alert props", {
+					success: false,
+					message: validationErrors,
+				});
+				setSaveStatus({ success: false, message: validationErrors });
+				return;
 			}
-
-			const updatedTeamName = editingTeamName
-				? `Team ${editingTeamName
-						.trim()
-						.match(/\b(\w+)/g)
-						.map(capitalize)
-						.join(" ")}`
-				: "";
-
-			otherUpdatingTeams.forEach((team) => {
-				if (team.teamName === updatedTeamName) {
-					validationErrors.push("Team name already exists");
-				}
-			});
 
 			// move team members to other teams
 			// editingMembers.forEach((member) => {
@@ -148,11 +138,6 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 		setEditingMembers([]);
 	};
 
-	const displayingMembers = useMemo(
-		() => (editing ? editingMembers : members),
-		[editing, editingMembers, members]
-	);
-
 	const onEditingFieldChanged = (memberInd, field, newValue) => {
 		const updatedEditingMembers = [...editingMembers];
 		updatedEditingMembers[memberInd][field] = newValue;
@@ -161,13 +146,13 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
-		console.log("editingTeamName", editingTeamName);
-		if (editingTeamName === "") {
-			alert("here");
-			return;
-		}
 		stopEditing(true);
 	};
+
+	const displayingMembers = useMemo(
+		() => (editing ? editingMembers : members),
+		[editing, editingMembers, members]
+	);
 
 	return (
 		<div>
@@ -363,7 +348,7 @@ const TeamPage = ({ organization, loading, error, updateTeams }) => {
 															to={
 																editing
 																	? "#"
-																	: `/team/${teamId}/member/${memberNameFormatter(
+																	: `/team/${teamId}/member/${getMemberId(
 																			member.firstName,
 																			member.lastName
 																	  )}`
