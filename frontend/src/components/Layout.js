@@ -14,7 +14,7 @@ const user = {
 	imageSrc: avatar,
 };
 
-const Layout = ({ name, children }) => {
+const Layout = ({ title, children }) => {
 	const location = useLocation();
 
 	const pathnames = location.pathname.split("/").filter(isNotEmptyString);
@@ -70,7 +70,7 @@ const Layout = ({ name, children }) => {
 					<header className="py-10">
 						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 							<h1 className="text-3xl font-bold tracking-tight text-white">
-								{name}
+								{title}
 							</h1>
 							<div className="mt-4">
 								<BreadCrumb pages={pages} />

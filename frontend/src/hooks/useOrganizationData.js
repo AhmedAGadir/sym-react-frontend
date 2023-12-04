@@ -1,30 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const useOrganizationData = () => {
 	const [organization, setOrganization] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	useEffect(() => {
-		let mounted = true;
-		const fetchData = async () => {
-			try {
-				const response = await fetch("/get-data");
-				const data = await response.json();
-				if (mounted) {
-					setOrganization(data.organization);
-					setLoading(false);
-				}
-			} catch (error) {
-				setError(error);
-				setLoading(false);
+	const fetchData = useCallback(async () => {
+		try {
+			const response = await fetch("/get-data");
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(`${data.message}. Please try again.`);
 			}
-		};
+			setOrganization(data.organization);
+			setLoading(false);
+			setError(false);
+		} catch (error) {
+			setError(error);
+			setLoading(false);
+		}
+	}, [setOrganization, setLoading, setError]);
+
+	useEffect(() => {
 		fetchData();
-		return () => {
-			mounted = false;
-		};
-	}, []);
+	}, [fetchData]);
+
+	const refetch = () => {
+		setLoading(true);
+		fetchData();
+	};
 
 	const updateTeams = async (updatedTeams) => {
 		const updatedOrganization = { ...organization };
@@ -41,15 +46,16 @@ const useOrganizationData = () => {
 				}),
 			});
 
+			const { message } = await response.json();
+
 			if (!response.ok) {
-				throw new Error("Failed to update team.");
+				throw new Error(`${message}. Please try again.`);
 			}
 
 			setOrganization(updatedOrganization);
-			return { success: true };
+			return { success: true, message };
 		} catch (error) {
-			setError(error);
-			return { success: false };
+			return { success: false, message: error.message };
 		}
 	};
 
@@ -76,7 +82,7 @@ const useOrganizationData = () => {
 		// }
 	};
 
-	return { organization, loading, error, updateTeams, updateMember };
+	return { organization, loading, error, updateTeams, updateMember, refetch };
 };
 
 export default useOrganizationData;

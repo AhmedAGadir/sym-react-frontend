@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Spinner from "./components/Spinner";
 import Layout from "./components/Layout";
+import Modal from "./components/Modal";
 import useOrganizationData from "./hooks/useOrganizationData";
 import {
 	HomePage,
@@ -10,9 +11,41 @@ import {
 	TeamRedirectPage,
 	MemberRedirectPage,
 } from "./pages";
+import Loader from "./components/Loader";
+import { classNames } from "./utils";
 
 export default function App() {
-	const { organization, loading, error, updateTeams } = useOrganizationData();
+	const { organization, loading, error, updateTeams, refetch } =
+		useOrganizationData();
+
+	if (error) {
+		return (
+			<Router>
+				<Layout>
+					<Modal
+						message={error.message}
+						renderButton={() => (
+							<div className="flex items-center justify-end p-4 md:p-5 rounded-b">
+								{loading && <Spinner className="w-8 h-8 mr-3" />}
+								<button
+									data-modal-hide="static-modal"
+									type="button"
+									onClick={refetch}
+									className={classNames(
+										"text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-1 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5",
+										loading && "opacity-50 cursor-not-allowed"
+									)}
+									disabled={loading}
+								>
+									Try again
+								</button>
+							</div>
+						)}
+					/>
+				</Layout>
+			</Router>
+		);
+	}
 
 	if (loading) {
 		return (
@@ -22,15 +55,9 @@ export default function App() {
 		);
 	}
 
-	if (error) {
-		return (
-			<h1 className="text-3xl font-bold text-red-500">An error occurred</h1>
-		);
-	}
-
 	return (
 		<Router>
-			<Layout name={organization.name}>
+			<Layout title={organization.name}>
 				<Routes>
 					<Route
 						path="/"
@@ -52,7 +79,7 @@ export default function App() {
 						path="/team/:teamId/member/:memberId"
 						element={<MemberPage />}
 					/>
-					<Route path="*" element={<h1>Not Found</h1>} />
+					<Route path="*" element={<h1>Page Not Found</h1>} />
 				</Routes>
 			</Layout>
 		</Router>

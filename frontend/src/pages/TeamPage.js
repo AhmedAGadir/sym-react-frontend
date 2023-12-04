@@ -33,12 +33,6 @@ const TeamPage = ({ organization, updateTeams }) => {
 		[organization, teamId]
 	);
 
-	console.group("teampage");
-	console.log("teamid", teamId);
-	console.log("team", team);
-	console.log("organization?.teams", organization?.teams);
-	console.groupEnd();
-
 	const members = useMemo(
 		() =>
 			team?.members
@@ -59,8 +53,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 	const [editingMembers, setEditingMembers] = useState([]);
 	const [saveStatus, setSaveStatus] = useState(null);
 	const [editMade, setEditMade] = useState(false);
-	const [updating, setUpdating] = useState(false);
-	const [error, setError] = useState(null);
+	const [submitting, setSubmitting] = useState(false);
 
 	const startEditing = () => {
 		setSaveStatus(null);
@@ -72,80 +65,87 @@ const TeamPage = ({ organization, updateTeams }) => {
 	};
 
 	const stopEditing = async (saveChanges) => {
-		if (saveChanges && editMade) {
-			// update state via API call using editingMembers state
-			const updatedTeams = organization.teams.map((team) => ({
-				...team,
-				members: team.members.map((member) => ({ ...member })),
-			}));
-
-			const teamInd = organization.teams.findIndex(
-				(team) => getTeamId(team.teamName) === teamId
-			);
-
-			// update team name
-			const updatedTeamName = `Team ${editingTeamName
-				.trim()
-				.match(/\b(\w+)/g)
-				.map(capitalize)
-				.join(" ")}`;
-
-			updatedTeams[teamInd].teamName = updatedTeamName;
-
-			// update team members
-			const updatedTeamMembers = [];
-
-			editingMembers.forEach(
-				({ team: editingMembersTeam, ...restOfEditingMember }) => {
-					if (getTeamId(editingMembersTeam) === teamId) {
-						// remove 'team' property from member and keep in this team
-						updatedTeamMembers.push(restOfEditingMember);
-					} else {
-						// move member to correct team
-						const otherTeamInd = updatedTeams.findIndex(
-							(otherTeam) =>
-								getTeamId(otherTeam.teamName) === getTeamId(editingMembersTeam)
-						);
-						updatedTeams[otherTeamInd].members.push(restOfEditingMember);
-					}
-				}
-			);
-
-			updatedTeams[teamInd].members = updatedTeamMembers;
-			console.log("updatedTeams", updatedTeams);
-
-			// validate updated teams
-			const validationErrors = getTeamValidationErrors(updatedTeams);
-
-			if (validationErrors.length > 0) {
-				setSaveStatus({ success: false, message: validationErrors });
-				return;
-			}
-
-			setUpdating(true);
-			const { success } = await updateTeams(updatedTeams);
-
-			if (success) {
-				// this could be improved to navigate to the new team page
-				const updatedTeamId = getTeamId(updatedTeamName);
-				if (updatedTeamId !== teamId) {
-					navigate(`/team/${updatedTeamId}`);
-				}
-				setSaveStatus({
-					success: true,
-					message: "Team updated successfully",
-				});
-				setUpdating(false);
-			} else {
-				setError(error);
-				setUpdating(false);
-			}
-		} else {
+		if (!saveChanges || !editMade) {
 			setSaveStatus(null);
+			setEditing(false);
+			setEditingTeamName("");
+			setEditingMembers([]);
+			setEditMade(false);
+			return;
 		}
+
+		// update state via API call using editingMembers state
+		const updatedTeams = organization.teams.map((team) => ({
+			...team,
+			members: team.members.map((member) => ({ ...member })),
+		}));
+
+		const teamInd = organization.teams.findIndex(
+			(team) => getTeamId(team.teamName) === teamId
+		);
+
+		// update team name
+		const updatedTeamName = `Team ${editingTeamName
+			.trim()
+			.match(/\b(\w+)/g)
+			.map(capitalize)
+			.join(" ")}`;
+
+		updatedTeams[teamInd].teamName = updatedTeamName;
+
+		// update team members
+		const updatedTeamMembers = [];
+
+		editingMembers.forEach(
+			({ team: editingMembersTeam, ...restOfEditingMember }) => {
+				if (getTeamId(editingMembersTeam) === teamId) {
+					// remove 'team' property from member and keep in this team
+					updatedTeamMembers.push(restOfEditingMember);
+				} else {
+					// move member to correct team
+					const otherTeamInd = updatedTeams.findIndex(
+						(otherTeam) =>
+							getTeamId(otherTeam.teamName) === getTeamId(editingMembersTeam)
+					);
+					updatedTeams[otherTeamInd].members.push(restOfEditingMember);
+				}
+			}
+		);
+
+		updatedTeams[teamInd].members = updatedTeamMembers;
+
+		// validate updated teams
+		const validationErrors = getTeamValidationErrors(updatedTeams);
+
+		if (validationErrors.length > 0) {
+			setSaveStatus({ success: false, message: validationErrors });
+			return;
+		}
+
+		setSubmitting(true);
+		const { success, message } = await updateTeams(updatedTeams);
+
+		if (success) {
+			// this could be improved to navigate to the new team page
+			const updatedTeamId = getTeamId(updatedTeamName);
+			if (updatedTeamId !== teamId) {
+				navigate(`/team/${updatedTeamId}`);
+			}
+		}
+		setSaveStatus({
+			success,
+			message,
+		});
+		setSubmitting(false);
+
+		if (!success) {
+			return;
+		}
+
 		setEditing(false);
 		setEditingTeamName("");
 		setEditingMembers([]);
+		setEditMade(false);
 	};
 
 	const onTeamNameChanged = (e) => {
@@ -201,6 +201,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 											onChange={onTeamNameChanged}
 											addOn="Team"
 											required
+											disabled={submitting}
 										/>
 									</div>
 								)}
@@ -230,7 +231,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 											type="submit"
 											className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
 										>
-											{updating ? <Loader /> : "Save"}
+											{submitting ? <Loader /> : "Save"}
 										</button>
 									</div>
 								)}
@@ -242,18 +243,22 @@ const TeamPage = ({ organization, updateTeams }) => {
 							)}
 							{saveStatus && !saveStatus.success && (
 								<Alert type="danger">
-									<div className="flex">
-										<div>
-											<span className="font-medium">
-												Ensure that these requirements are met:
-											</span>
-											<ul className="mt-1.5 list-disc list-inside">
-												{saveStatus.message.map((msg) => (
-													<li key={msg}>{msg}</li>
-												))}
-											</ul>
+									{Array.isArray(saveStatus.message) ? (
+										<div className="flex">
+											<div>
+												<span className="font-medium">
+													Ensure that these requirements are met:
+												</span>
+												<ul className="mt-1.5 list-disc list-inside">
+													{saveStatus.message.map((msg) => (
+														<li key={msg}>{msg}</li>
+													))}
+												</ul>
+											</div>
 										</div>
-									</div>
+									) : (
+										<span>{saveStatus.message}</span>
+									)}
 								</Alert>
 							)}
 						</div>
@@ -270,7 +275,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 													Name
 												</th>
 												<th scope="col" className="sr-only">
-													Errors
+													Warnings
 												</th>
 												<th
 													scope="col"
@@ -341,6 +346,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 																		e.target.value === ROLES.TEAM_LEAD
 																	)
 																}
+																disabled={submitting}
 															/>
 														)}
 														{!editing && (
@@ -369,6 +375,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 																		e.target.value
 																	)
 																}
+																disabled={submitting}
 															/>
 														) : (
 															capitalize(getTeamId(member.team))
