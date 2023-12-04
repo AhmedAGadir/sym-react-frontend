@@ -10,8 +10,12 @@ import EditableContainer from "../components/EditableContainer";
 
 import { getTeamValidationErrors } from "../validation";
 import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
-import { ROLES } from "../constants";
 import BackButton from "../components/BackButton";
+
+export const ROLES = {
+	TEAM_LEAD: "Team Lead",
+	MEMBER: "Member",
+};
 
 const TeamPage = ({ organization, updateTeams }) => {
 	const { teamId } = useParams();

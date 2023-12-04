@@ -69,7 +69,7 @@ Your task is to create a React frontend for an existing backend.
 
 13. **Submission**
     - Create a zip file with your solution.
-    - Send it to aslee@symmetryinvestments.com
+    - Send it to **_@_**.\*\*\*
 
 **Questions?**  
 Please contact us if you have any questions.

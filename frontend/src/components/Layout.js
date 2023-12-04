@@ -10,7 +10,7 @@ const INVALID_ROUTES = ["team", "member"];
 
 const user = {
 	name: "Ahmed Gadir",
-	email: "ahmed.gadir@symmetryinvestments.com",
+	email: "ahmed.gadir@email.com",
 	imageSrc: avatar,
 };
 
