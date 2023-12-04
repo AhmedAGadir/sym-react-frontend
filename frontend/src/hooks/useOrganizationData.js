@@ -59,9 +59,7 @@ const useOrganizationData = () => {
 		}
 	};
 
-	const updateMember = async (teamInd, memberInd, updatedMember) => {};
-
-	return { organization, loading, error, updateTeams, updateMember, refetch };
+	return { organization, loading, error, updateTeams, refetch };
 };
 
 export default useOrganizationData;

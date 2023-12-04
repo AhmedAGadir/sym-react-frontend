@@ -11,10 +11,10 @@ import EditableContainer from "../components/EditableContainer";
 import { getTeamValidationErrors } from "../validation";
 import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
 import { ROLES } from "../constants";
+import BackButton from "../components/BackButton";
 
 const TeamPage = ({ organization, updateTeams }) => {
 	const { teamId } = useParams();
-
 	const navigate = useNavigate();
 
 	const team = useMemo(
@@ -115,17 +115,13 @@ const TeamPage = ({ organization, updateTeams }) => {
 		setSubmitting(true);
 		const { success, message } = await updateTeams(updatedTeams);
 
-		setSaveStatus({
-			success,
-			message,
-		});
+		setSaveStatus({ success, message });
 		setSubmitting(false);
 
 		if (!success) {
 			return;
 		}
 
-		// this could be improved to navigate to the new team page
 		const updatedTeamId = getTeamId(updatedTeamName);
 		if (updatedTeamId !== teamId) {
 			navigate(`/team/${updatedTeamId}`);
@@ -170,7 +166,12 @@ const TeamPage = ({ organization, updateTeams }) => {
 				<EditableContainer editing={editing} onSubmit={onFormSubmit}>
 					<div className="px-4 sm:px-6 lg:px-8">
 						<div className="sm:flex sm:items-center">
-							<div className="sm:flex-auto">
+							<div className="sm:flex-auto relative">
+								<BackButton
+									to="/"
+									className="!absolute -left-12 lg:-left-20 -top-1"
+								/>
+
 								{!editing && (
 									<div>
 										<h1 className="text-base font-semibold leading-6 text-gray-900">

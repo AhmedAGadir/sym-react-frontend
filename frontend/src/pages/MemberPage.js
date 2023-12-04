@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getMemberId, getTeamId } from "../utils";
 import EditableContainer from "../components/EditableContainer";
 import Loader from "../components/Loader";
-import { getMemberValidationErrors } from "../validation";
 import { AvatarPlaceHolderIcon } from "../components/Icons";
+import Alert from "../components/Alert";
+import BackButton from "../components/BackButton";
+import { getMemberValidationErrors } from "../validation";
 
-const MemberPage = ({ organization, updateMember }) => {
+const MemberPage = ({ organization, updateTeams }) => {
 	const { teamId, memberId } = useParams();
+	const navigate = useNavigate();
 
 	const team = useMemo(
 		() =>
@@ -60,6 +63,32 @@ const MemberPage = ({ organization, updateMember }) => {
 		updatedTeams[teamInd].members[memberInd] = editingMember;
 
 		const validationErrors = getMemberValidationErrors(updatedTeams);
+
+		if (validationErrors.length > 0) {
+			setSaveStatus({ success: false, message: validationErrors[0] });
+			return;
+		}
+
+		setSubmitting(true);
+		const { success, message } = await updateTeams(updatedTeams);
+
+		setSaveStatus({ success, message });
+		setSubmitting(false);
+
+		if (!success) {
+			return;
+		}
+
+		const updatedMemberId = getMemberId(
+			editingMember.firstName,
+			editingMember.lastName
+		);
+		if (updatedMemberId !== memberId) {
+			navigate(`/team/${teamId}/member/${updatedMemberId}`);
+		}
+
+		setEditing(false);
+		setEditingMember(null);
 	};
 
 	const onInputChange = (e) => {
@@ -89,7 +118,12 @@ const MemberPage = ({ organization, updateMember }) => {
 	return (
 		<EditableContainer editing={editing} onSubmit={onFormSubmit}>
 			<div className="px-4 sm:px-6 lg:px-8">
-				<div className="mt-4 flex justify-end">
+				<div className="mt-2 flex justify-end relative">
+					<BackButton
+						to={`/team/${teamId}`}
+						className="!absolute -left-12 lg:-left-20 -top-3"
+					/>
+
 					{!editing && (
 						<button
 							type="button"
@@ -119,6 +153,31 @@ const MemberPage = ({ organization, updateMember }) => {
 					)}
 				</div>
 
+				<div>
+					{saveStatus && saveStatus.success && (
+						<Alert type="success">{saveStatus.message}</Alert>
+					)}
+					{saveStatus && !saveStatus.success && (
+						<Alert type="danger">
+							{Array.isArray(saveStatus.message) ? (
+								<div className="flex">
+									<div>
+										<span className="font-medium">
+											Ensure that these requirements are met:
+										</span>
+										<ul className="mt-1.5 list-disc list-inside">
+											{saveStatus.message.map((msg) => (
+												<li key={msg}>{msg}</li>
+											))}
+										</ul>
+									</div>
+								</div>
+							) : (
+								<span>{saveStatus.message}</span>
+							)}
+						</Alert>
+					)}
+				</div>
 				<div className="flex flex-col gap-3">
 					<AvatarPlaceHolderIcon />
 					<div>

@@ -14,7 +14,7 @@ import {
 import { classNames } from "./utils";
 
 export default function App() {
-	const { organization, loading, error, updateTeams, updateMember, refetch } =
+	const { organization, loading, error, updateTeams, refetch } =
 		useOrganizationData();
 
 	if (error) {
@@ -64,7 +64,6 @@ export default function App() {
 							<HomePage organization={organization} updateTeams={updateTeams} />
 						}
 					/>
-					{/* /team will redirect to home for simplicities sake */}
 					<Route path="/team" element={<TeamRedirectPage />} />
 					<Route
 						path="/team/:teamId"
@@ -72,14 +71,13 @@ export default function App() {
 							<TeamPage organization={organization} updateTeams={updateTeams} />
 						}
 					/>
-					{/* /team/:teamId/member will redirect to /team/:teamId for simplicities sake */}
 					<Route path="/team/:teamId/member" element={<MemberRedirectPage />} />
 					<Route
 						path="/team/:teamId/member/:memberId"
 						element={
 							<MemberPage
 								organization={organization}
-								updateMember={updateMember}
+								updateTeams={updateTeams}
 							/>
 						}
 					/>
