@@ -1,25 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
+
 import Dropdown from "../components/Dropdown";
-import getTeamValidationErrors from "../getTeamValidationErrors";
 import { InputWithAddOn } from "../components/Input";
 import Alert from "../components/Alert";
-import { ExclamationTriangleIcon } from "../components/Icons";
 import Loader from "../components/Loader";
+import { ExclamationTriangleIcon } from "../components/Icons";
+import EditableContainer from "../components/EditableContainer";
 
-const ROLES = {
-	TEAM_LEAD: "Team Lead",
-	MEMBER: "Member",
-};
-
-const TeamContainer = ({ children, editing, onSubmit }) => {
-	return editing ? (
-		<form onSubmit={onSubmit}>{children}</form>
-	) : (
-		<div>{children}</div>
-	);
-};
+import { getTeamValidationErrors } from "../validation";
+import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
+import { ROLES } from "../constants";
 
 const TeamPage = ({ organization, updateTeams }) => {
 	const { teamId } = useParams();
@@ -74,7 +65,6 @@ const TeamPage = ({ organization, updateTeams }) => {
 			return;
 		}
 
-		// update state via API call using editingMembers state
 		const updatedTeams = organization.teams.map((team) => ({
 			...team,
 			members: team.members.map((member) => ({ ...member })),
@@ -177,7 +167,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 				<h1 className="text-3xl font-bold text-red-500">Team not found</h1>
 			)}
 			{members.length > 0 && (
-				<TeamContainer editing={editing} onSubmit={onFormSubmit}>
+				<EditableContainer editing={editing} onSubmit={onFormSubmit}>
 					<div className="px-4 sm:px-6 lg:px-8">
 						<div className="sm:flex sm:items-center">
 							<div className="sm:flex-auto">
@@ -408,7 +398,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 							</div>
 						</div>
 					</div>
-				</TeamContainer>
+				</EditableContainer>
 			)}
 		</div>
 	);

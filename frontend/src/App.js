@@ -11,11 +11,10 @@ import {
 	TeamRedirectPage,
 	MemberRedirectPage,
 } from "./pages";
-import Loader from "./components/Loader";
 import { classNames } from "./utils";
 
 export default function App() {
-	const { organization, loading, error, updateTeams, refetch } =
+	const { organization, loading, error, updateTeams, updateMember, refetch } =
 		useOrganizationData();
 
 	if (error) {
@@ -77,7 +76,12 @@ export default function App() {
 					<Route path="/team/:teamId/member" element={<MemberRedirectPage />} />
 					<Route
 						path="/team/:teamId/member/:memberId"
-						element={<MemberPage />}
+						element={
+							<MemberPage
+								organization={organization}
+								updateMember={updateMember}
+							/>
+						}
 					/>
 					<Route path="*" element={<h1>Page Not Found</h1>} />
 				</Routes>

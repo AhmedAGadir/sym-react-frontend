@@ -59,28 +59,7 @@ const useOrganizationData = () => {
 		}
 	};
 
-	const updateMember = async (teamInd, memberInd, updatedMember) => {
-		// const updatedOrganization = { ...organization };
-		// updatedOrganization.teams[teamInd].members[memberInd] = updatedMember;
-		// // setLoading(true);
-		// try {
-		// 	const response = await fetch("/store-data", {
-		// 		method: "POST",
-		// 		headers: {
-		// 			"Content-Type": "application/json",
-		// 		},
-		// 		body: JSON.stringify(updatedOrganization),
-		// 	});
-		// 	if (!response.ok) {
-		// 		throw new Error("Failed to update member.");
-		// 	}
-		// 	setOrganization(updatedOrganization);
-		// 	// setLoading(false);
-		// } catch (error) {
-		// 	setError(error);
-		// 	// setLoading(false);
-		// }
-	};
+	const updateMember = async (teamInd, memberInd, updatedMember) => {};
 
 	return { organization, loading, error, updateTeams, updateMember, refetch };
 };
