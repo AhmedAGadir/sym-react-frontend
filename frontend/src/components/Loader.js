@@ -1,6 +1,6 @@
 import React from "react";
 
-const Loader = ({ width = 20, height = 5 }) => {
+const Loader = ({ width = 24, height = 8 }) => {
 	// <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
 	return (
 		<svg

@@ -125,13 +125,6 @@ const TeamPage = ({ organization, updateTeams }) => {
 		setSubmitting(true);
 		const { success, message } = await updateTeams(updatedTeams);
 
-		if (success) {
-			// this could be improved to navigate to the new team page
-			const updatedTeamId = getTeamId(updatedTeamName);
-			if (updatedTeamId !== teamId) {
-				navigate(`/team/${updatedTeamId}`);
-			}
-		}
 		setSaveStatus({
 			success,
 			message,
@@ -140,6 +133,12 @@ const TeamPage = ({ organization, updateTeams }) => {
 
 		if (!success) {
 			return;
+		}
+
+		// this could be improved to navigate to the new team page
+		const updatedTeamId = getTeamId(updatedTeamName);
+		if (updatedTeamId !== teamId) {
+			navigate(`/team/${updatedTeamId}`);
 		}
 
 		setEditing(false);
@@ -213,7 +212,6 @@ const TeamPage = ({ organization, updateTeams }) => {
 										type="button"
 										onClick={startEditing}
 										className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
-										// 	? " bg-indigo-400 hover:bg-indigo-300 focus-visible:outline-indigo-400"
 									>
 										Edit Team
 									</button>
@@ -230,6 +228,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 										<button
 											type="submit"
 											className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
+											disabled={submitting}
 										>
 											{submitting ? <Loader /> : "Save"}
 										</button>
