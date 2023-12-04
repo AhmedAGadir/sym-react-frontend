@@ -21,13 +21,13 @@ You need to have Node.js installed on your machine. If you don't have Node.js in
 Clone the repository to your local machine:
 
 ```bash
-git clone [repository URL]
+git clone https://github.com/AhmedAGadir/sym-react-frontend.git
 ```
 
 Navigate to the project directory:
 
 ```bash
-cd frontend-candidate-test
+cd sym-react-frontend-main
 ```
 
 Install the project dependencies:
