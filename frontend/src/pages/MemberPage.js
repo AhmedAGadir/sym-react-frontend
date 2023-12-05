@@ -5,7 +5,6 @@ import EditableContainer from "../components/EditableContainer";
 import Loader from "../components/Loader";
 import { AvatarPlaceHolderIcon } from "../components/Icons";
 import Alert from "../components/Alert";
-import BackButton from "../components/BackButton";
 import { getMemberValidationErrors } from "../validation";
 
 const MemberPage = ({ organization, updateTeams }) => {
@@ -118,12 +117,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 	return (
 		<EditableContainer editing={editing} onSubmit={onFormSubmit}>
 			<div className="px-4 sm:px-6 lg:px-8">
-				<div className="mt-2 flex justify-end relative">
-					<BackButton
-						to={`/team/${teamId}`}
-						className="!absolute -left-12 lg:-left-20 -top-3"
-					/>
-
+				<div className="mt-2 flex justify-end">
 					{!editing && (
 						<button
 							type="button"

@@ -1,9 +1,9 @@
 import companyLogo from "../assets/images/company-logo.png";
 import avatar from "../assets/images/avatar.webp";
 import BreadCrumb from "./BreadCrumb";
-import { BellIcon } from "./Icons";
+import { ArrowLeftIcon, BellIcon } from "./Icons";
 import { capitalize } from "../utils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isNotEmptyString } from "../utils";
 
 const INVALID_ROUTES = ["team", "member"];
@@ -33,6 +33,27 @@ const Layout = ({ title, children }) => {
 			})
 			.filter((page) => !INVALID_ROUTES.includes(page.name.toLowerCase())) ??
 		[];
+
+	const navigate = useNavigate();
+
+	const onHomePage = location.pathname === "/";
+
+	const onBackButtonClick = () => {
+		const segments = location.pathname.split("/").filter(isNotEmptyString);
+		if (segments.length > 1) {
+			segments.pop();
+			// if were going to go back to an invalid Route, then move even one step back
+			// otherwise just move one step back
+			if (
+				INVALID_ROUTES.includes(segments[segments.length - 1].toLowerCase())
+			) {
+				segments.pop();
+			}
+
+			const previousPath = segments.join("/");
+			navigate(previousPath);
+		}
+	};
 
 	return (
 		<>
@@ -81,7 +102,15 @@ const Layout = ({ title, children }) => {
 
 				<main className="-mt-32">
 					<div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-						<div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+						<div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6 relative">
+							{!onHomePage && (
+								<div
+									onClick={onBackButtonClick}
+									className="text-gray-900 hover:text-indigo-500 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition absolute -left-2 top-6 lg:-left-6"
+								>
+									<ArrowLeftIcon className="w-5 h-5" />
+								</div>
+							)}
 							{children}
 						</div>
 					</div>

@@ -10,9 +10,8 @@ import EditableContainer from "../components/EditableContainer";
 
 import { getTeamValidationErrors } from "../validation";
 import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
-import BackButton from "../components/BackButton";
 
-export const ROLES = {
+const ROLES = {
 	TEAM_LEAD: "Team Lead",
 	MEMBER: "Member",
 };
@@ -170,12 +169,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 				<EditableContainer editing={editing} onSubmit={onFormSubmit}>
 					<div className="px-4 sm:px-6 lg:px-8">
 						<div className="sm:flex sm:items-center">
-							<div className="sm:flex-auto relative">
-								<BackButton
-									to="/"
-									className="!absolute -left-12 lg:-left-20 -top-1"
-								/>
-
+							<div className="sm:flex-auto">
 								{!editing && (
 									<div>
 										<h1 className="text-base font-semibold leading-6 text-gray-900">
