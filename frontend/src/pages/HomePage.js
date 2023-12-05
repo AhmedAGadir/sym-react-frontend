@@ -6,17 +6,18 @@ import { UsersIcon } from "../components/Icons";
 const HomePage = ({ organization }) => {
 	const teamsSummary = useMemo(() => {
 		if (!organization) return [];
-		return organization.teams.map((team) => {
-			const teamId = getTeamId(team.teamName);
-			const teamLead = team.members?.find((member) => member.isTeamLead);
-			return {
-				name: capitalize(teamId),
-				memberCount: team.members.length,
-				lead: `${teamLead.firstName} ${teamLead.lastName}`,
-				href: `/team/${teamId}`,
-			};
-		})
-		.sort((a, b) => a.name.localeCompare(b.name));
+		return organization.teams
+			.map((team) => {
+				const teamId = getTeamId(team.teamName);
+				const teamLead = team.members?.find((member) => member.isTeamLead);
+				return {
+					name: capitalize(teamId),
+					memberCount: team.members.length,
+					lead: `${teamLead.firstName} ${teamLead.lastName}`,
+					href: `/team/${teamId}`,
+				};
+			})
+			.sort((a, b) => a.name.localeCompare(b.name));
 	}, [organization]);
 
 	return (

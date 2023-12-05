@@ -28,9 +28,7 @@ export const getTeamValidationErrors = (teams) => {
 	);
 
 	if (teamsWithMultipleTeamLeads.length > 0) {
-		validationErrors.push(
-			"Designated Team Leads cannot be transfered to other teams"
-		);
+		validationErrors.push("Each team can have only one designated Team Lead");
 	}
 
 	return validationErrors;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Loader from "../components/Loader";
 import Alert from "./Alert";
+import { classNames } from "../utils";
 
 const EditableContainerWrapper = ({ children, editing, onSubmit }) => {
 	return editing ? (
@@ -15,7 +16,10 @@ const EditableContainer = ({
 	editLabel = "Edit",
 	renderHeader = () => <div className="flex-1"></div>,
 	onEditingStarted = () => {},
-	onEditingStopped = async () => ({ abortStopEditing: false }),
+	onEditingStopped = async () => ({
+		abortStopEditing: false,
+		saveStatus: null,
+	}),
 }) => {
 	const [editing, setEditing] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
@@ -69,7 +73,11 @@ const EditableContainer = ({
 								<button
 									type="button"
 									onClick={() => stopEditing(true)}
-									className="rounded-md bg-white px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+									className={classNames(
+										"rounded-md bg-white px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50",
+										submitting && "opacity-50"
+									)}
+									disabled={submitting}
 								>
 									Cancel
 								</button>
