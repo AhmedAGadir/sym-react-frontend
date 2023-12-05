@@ -4,6 +4,7 @@ import Spinner from "./components/Spinner";
 import Layout from "./components/Layout";
 import Modal from "./components/Modal";
 import useOrganizationData from "./hooks/useOrganizationData";
+import useOrganizationDataFrontend from "./hooks/FRONTEND_useOrganizationData";
 import {
 	HomePage,
 	TeamPage,
@@ -13,9 +14,17 @@ import {
 } from "./pages";
 import { classNames } from "./utils";
 
+const mode = "frontend"; // 'frontend" or "fullStack"
+
+const useDataHook = {
+	frontend: useOrganizationDataFrontend,
+	fullStack: useOrganizationData,
+};
+
+const useOrgData = useDataHook[mode];
+
 export default function App() {
-	const { organization, loading, error, updateTeams, refetch } =
-		useOrganizationData();
+	const { organization, loading, error, updateTeams, refetch } = useOrgData();
 
 	if (error) {
 		return (
