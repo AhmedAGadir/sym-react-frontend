@@ -4,6 +4,10 @@ Here is my submission for a frontend candidate test using only React and Tailwin
 
 Here are the [requirements](requirements.md).
 
+FRONTEND VERSION - see deployment at
+
+FULLSTACK VERSION (download this repo and use the DEPRECATED_useOrganizationData.js hook instead of the one currently being used)
+
 ![Sample Organization Demo](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-demo.gif)
 
 <!-- ![Sample Organization Screenshot](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-screenshot.png) -->
