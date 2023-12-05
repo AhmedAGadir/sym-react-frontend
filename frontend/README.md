@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+# Frontend Candidate Test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to my submission for the frontend candidate test. This project is implemented using React and Tailwind CSS and is designed to be run in either a frontend-only mode or a full-stack mode.
 
-## Available Scripts
+Below, you'll find detailed instructions for setting up and running the project in your preferred configuration. You can check the specific project requirements [here](requirements.md).
 
-In the project directory, you can run:
+![Sample Organization Demo](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-demo.gif)
 
-### `npm start`
+<!-- ![Sample Organization Screenshot](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-screenshot.png) -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+These steps will guide you in getting a copy of the project up and running on your local machine for development and testing purposes.
 
-### `npm test`
+### Setup for Frontend or Fullstack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To configure the project for either frontend-only or full-stack mode:
 
-### `npm run build`
+1. Open `frontend/src/App.js`.
+2. Change the `mode` variable to either `"frontend"` or `"fullStack"` based on your desired setup.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### For Frontend-Only Mode
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+If you're running the project in frontend-only mode, navigate to the frontend directory:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+cd frontend
+```
 
-### `npm run eject`
+After navigating to the frontend directory, perform the following steps:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Install the dependencies:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   npm install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Start the development server:
+   ```bash
+   npm start
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This will launch the frontend application in development mode, opening a new browser window if possible, or you can manually visit [http://localhost:3000](http://localhost:3000) to view it.
 
-## Learn More
+#### For Fullstack Mode
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+In full-stack mode, the project will run both the frontend and backend services. Follow the instructions in the "Installing" and "Running the Project" sections.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prerequisites
 
-### Code Splitting
+Ensure you have Node.js installed on your machine. If not, download and install it from the [Node.js official website](https://nodejs.org/).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Installing
 
-### Analyzing the Bundle Size
+To clone and set up the project:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Clone the repository:
 
-### Making a Progressive Web App
+   ```bash
+   git clone https://github.com/AhmedAGadir/sym-react-frontend.git
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. Navigate to the project directory:
 
-### Advanced Configuration
+   ```bash
+   cd sym-react-frontend-main
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+3. Install the necessary dependencies:
+   ```bash
+   npm install
+   npm run client-install
+   ```
 
-### Deployment
+### Running the Project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Depending on your mode (frontend-only or full-stack), the running instructions will differ:
 
-### `npm run build` fails to minify
+#### Backend Server (for Fullstack Mode)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Start the backend server:
+
+```bash
+npm run server
+```
+
+#### Frontend Client
+
+Start the frontend client:
+
+```bash
+npm run client
+```
+
+#### Concurrently (for Fullstack Mode)
+
+To run both the server and client concurrently (useful during development):
+
+```bash
+npm run dev
+```
+
+### Project Structure
+
+- `main.js`: The entry point for the backend server.
+- `frontend`: Contains all files related to the frontend client.
+
+### Available Scripts
+
+- `start`: Launches the backend server using Node.
+- `server`: Starts the backend server with Nodemon for automatic reloading.
+- `client`: Initiates the frontend client.
+- `client-install`: Installs dependencies for the frontend client.
+- `dev`: Concurrently runs both backend and frontend in development mode.
+
+## License
+
+This project is licensed under the MIT License.
