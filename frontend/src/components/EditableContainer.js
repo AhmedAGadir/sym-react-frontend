@@ -12,6 +12,7 @@ const EditableContainerWrapper = ({ children, editing, onSubmit }) => {
 
 const EditableContainer = ({
 	children,
+	editLabel = "Edit",
 	renderHeader = () => <div className="flex-1"></div>,
 	onEditingStarted = () => {},
 	onEditingStopped = async () => ({ abortStopEditing: false }),
@@ -51,7 +52,7 @@ const EditableContainer = ({
 	return (
 		<EditableContainerWrapper editing={editing} onSubmit={onFormSubmit}>
 			<div className="px-4 sm:px-6 lg:px-8">
-				<div className="sm:flex sm:items-center">
+				<div className="sm:flex sm:items-start">
 					{renderHeader(editing, submitting)}
 					<div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
 						{!editing && (
@@ -60,7 +61,7 @@ const EditableContainer = ({
 								onClick={startEditing}
 								className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
 							>
-								Edit Team
+								{editLabel}
 							</button>
 						)}
 						{editing && (

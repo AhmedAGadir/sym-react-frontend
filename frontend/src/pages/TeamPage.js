@@ -143,6 +143,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 			)}
 			{members.length > 0 && (
 				<EditableContainer
+					editLabel="Edit Team"
 					onEditingStarted={onEditingStarted}
 					onEditingStopped={onEditingStopped}
 					renderHeader={(editing, submitting) => (

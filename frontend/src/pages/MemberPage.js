@@ -98,6 +98,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 
 	return (
 		<EditableContainer
+			editLabel="Edit Member"
 			onEditingStarted={onEditingStarted}
 			onEditingStopped={onEditingStopped}
 		>
