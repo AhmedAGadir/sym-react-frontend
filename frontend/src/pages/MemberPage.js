@@ -25,6 +25,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 	);
 
 	const [editingMember, setEditingMember] = useState(null);
+	const [isDirty, setIsDirty] = useState(false);
 
 	const onEditingStarted = () => {
 		const memberCopy = { ...member };
@@ -32,8 +33,9 @@ const MemberPage = ({ organization, updateTeams }) => {
 	};
 
 	const onEditingStopped = async (rollback) => {
-		if (rollback) {
+		if (rollback || !isDirty) {
 			setEditingMember(null);
+			setIsDirty(false);
 			return { abortStopEditing: false, saveStatus: null };
 		}
 
@@ -85,6 +87,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 			...prevState,
 			[name]: value,
 		}));
+		setIsDirty(true);
 	};
 
 	if (!member) {

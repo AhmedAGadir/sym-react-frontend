@@ -125,17 +125,15 @@ const TeamPage = ({ organization, updateTeams }) => {
 	};
 
 	const onTeamNameChanged = (e) => {
-		setIsDirty(true);
-
 		setEditingTeamName(e.target.value);
+		setIsDirty(true);
 	};
 
 	const onEditingFieldChanged = (memberInd, field, newValue) => {
-		setIsDirty(true);
-
 		const updatedEditingMembers = [...editingMembers];
 		updatedEditingMembers[memberInd][field] = newValue;
 		setEditingMembers(updatedEditingMembers);
+		setIsDirty(true);
 	};
 
 	return (
