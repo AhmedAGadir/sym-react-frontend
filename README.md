@@ -1,12 +1,21 @@
 # Frontend Candidate Test
 
-Here is my submission for a frontend candidate test using only React and Tailwind - no other libraries.
+This is my submission for a frontend candidate test, implemented using React and Tailwind CSS, without the use of additional libraries.
 
-Here are the [requirements](requirements.md).
+You can find the project requirements [here](requirements.md).
 
-FRONTEND VERSION - see deployment at
+## Frontend Version
 
-FULLSTACK VERSION (download this repo and use the DEPRECATED_useOrganizationData.js hook instead of the one currently being used)
+The frontend-only version of the project is deployed and can be viewed at: [https://ahmedgadir-sampleorg.netlify.app/](https://ahmedgadir-sampleorg.netlify.app/)
+
+## Fullstack Version
+
+To switch to the fullstack version of the project, please follow these steps:
+
+1. Delete the current file located at `/frontend/hooks/useOrganizationData.js`.
+2. Rename the file `DEPRECATED_useOrganizationData.js` (found in the same directory) to `useOrganizationData.js`.
+
+This will enable the use of the `useOrganizationData` hook tailored for the fullstack version of the project.
 
 ![Sample Organization Demo](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-demo.gif)
 
