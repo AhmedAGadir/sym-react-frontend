@@ -4,19 +4,6 @@ This is my submission for a frontend candidate test, implemented using React and
 
 You can find the project requirements [here](requirements.md).
 
-## Frontend Version
-
-The frontend-only version of the project is deployed and can be viewed at: [https://ahmedgadir-sampleorg.netlify.app/](https://ahmedgadir-sampleorg.netlify.app/)
-
-## Fullstack Version
-
-To switch to the fullstack version of the project, please follow these steps:
-
-1. Delete the current file located at `/frontend/hooks/useOrganizationData.js`.
-2. Rename the file `DEPRECATED_useOrganizationData.js` (found in the same directory) to `useOrganizationData.js`.
-
-This will enable the use of the `useOrganizationData` hook tailored for the fullstack version of the project.
-
 ![Sample Organization Demo](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-demo.gif)
 
 <!-- ![Sample Organization Screenshot](https://github.com/AhmedAGadir/sym-react-frontend/blob/main/sample-organization-screenshot.png) -->
