@@ -4,6 +4,7 @@ import { getMemberId, getTeamId } from "../utils";
 import EditableContainer from "../components/EditableContainer";
 import { AvatarPlaceHolderIcon } from "../components/Icons";
 import { getMemberValidationErrors } from "../validation";
+import { Input } from "../components/Input";
 
 const MemberPage = ({ organization, updateTeams }) => {
 	const { teamId, memberId } = useParams();
@@ -106,90 +107,52 @@ const MemberPage = ({ organization, updateTeams }) => {
 				<div className="flex flex-col gap-3">
 					<AvatarPlaceHolderIcon />
 					<div>
-						<label
-							htmlFor="firstName"
-							className="block text-sm font-medium leading-6 text-gray-900"
-						>
-							First Name
-						</label>
-
-						<div className="mt-2">
-							<input
-								type="text"
-								name="firstName"
-								id="firstName"
-								value={editing ? editingMember?.firstName : member.firstName}
-								className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								onChange={onInputChange}
-								disabled={!editing || submitting}
-								required
-							/>
-						</div>
+						<Input
+							id="firstName"
+							label="First Name"
+							value={editing ? editingMember?.firstName : member.firstName}
+							onChange={onInputChange}
+							disabled={!editing || submitting}
+							required
+							className="w-full"
+						/>
 					</div>
 					<div>
-						<label
-							htmlFor="lastName"
-							className="block text-sm font-medium leading-6 text-gray-900"
-						>
-							Last Name
-						</label>
-						<div className="mt-2">
-							<input
-								type="text"
-								name="lastName"
-								id="lastName"
-								value={editing ? editingMember?.lastName : member.lastName}
-								className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								onChange={onInputChange}
-								disabled={!editing || submitting}
-								required
-							/>
-						</div>
+						<Input
+							id="lastName"
+							label="Last Name"
+							value={editing ? editingMember?.lastName : member.lastName}
+							onChange={onInputChange}
+							disabled={!editing || submitting}
+							required
+							className="w-full"
+						/>
 					</div>
 					<div>
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium leading-6 text-gray-900"
-						>
-							Email
-						</label>
-						<div className="mt-2">
-							<input
-								type="text"
-								name="email"
-								id="email"
-								value={editing ? editingMember?.email : member.email}
-								className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								onChange={onInputChange}
-								disabled={!editing || submitting}
-								required
-							/>
-						</div>
+						<Input
+							id="email"
+							label="Email"
+							value={editing ? editingMember?.email : member.email}
+							onChange={onInputChange}
+							disabled={!editing || submitting}
+							required
+							className="w-full"
+						/>
 					</div>
 					<div>
-						<label
-							htmlFor="startDate"
-							className="block text-sm font-medium leading-6 text-gray-900"
-						>
-							Start Date
-						</label>
-						<div className="mt-2">
-							<input
-								type="date"
-								name="startDate"
-								id="startDate"
-								value={editing ? editingMember?.startDate : member.startDate}
-								className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								onChange={onInputChange}
-								disabled={!editing || submitting}
-							/>
-						</div>
+						<Input
+							type="date"
+							id="startDate"
+							label="Start Date"
+							value={editing ? editingMember?.startDate : member.startDate}
+							onChange={onInputChange}
+							disabled={!editing || submitting}
+							required
+							className="w-full"
+						/>
 					</div>
 					<div>
-						<div
-							htmlFor="startDate"
-							className="block text-sm font-medium leading-6 text-gray-900"
-						>
+						<div className="block text-sm font-medium leading-6 text-gray-900">
 							Role
 						</div>
 						<div className="flex items-center mt-2 mb-4">
