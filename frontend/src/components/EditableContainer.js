@@ -93,11 +93,8 @@ const EditableContainer = ({
 					</div>
 				</div>
 				<div className="mt-3">
-					{saveStatus && saveStatus.success && (
-						<Alert type="success">{saveStatus.message}</Alert>
-					)}
-					{saveStatus && !saveStatus.success && (
-						<Alert type="danger">
+					{saveStatus && (
+						<Alert type={saveStatus.status}>
 							{Array.isArray(saveStatus.message) ? (
 								<div className="flex">
 									<div>

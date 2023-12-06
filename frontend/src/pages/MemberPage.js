@@ -60,14 +60,17 @@ const MemberPage = ({ organization, updateTeams }) => {
 		if (validationErrors.length > 0) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { success: false, message: validationErrors },
+				saveStatus: { status: "warning", message: validationErrors },
 			};
 		}
 
 		const { success, message } = await updateTeams(updatedTeams);
 
 		if (!success) {
-			return { abortStopEditing: true, saveStatus: { success, message } };
+			return {
+				abortStopEditing: true,
+				saveStatus: { status: "danger", message },
+			};
 		}
 
 		const updatedMemberId = getMemberId(
@@ -79,7 +82,10 @@ const MemberPage = ({ organization, updateTeams }) => {
 		}
 
 		setEditingMember(null);
-		return { abortStopEditing: false, saveStatus: { success, message } };
+		return {
+			abortStopEditing: false,
+			saveStatus: { status: "success", message },
+		};
 	};
 
 	const onInputChange = (e) => {

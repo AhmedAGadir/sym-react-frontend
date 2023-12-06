@@ -4,6 +4,7 @@ import { classNames } from "../utils";
 const alertStyles = {
 	success: "text-green-800 bg-green-50",
 	danger: "text-red-800 bg-red-50",
+	warning: "text-yellow-800 bg-yellow-50",
 };
 
 const Alert = ({ type, children }) => {

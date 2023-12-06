@@ -103,14 +103,17 @@ const TeamPage = ({ organization, updateTeams }) => {
 		if (validationErrors.length > 0) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { success: false, message: validationErrors },
+				saveStatus: { status: "warning", message: validationErrors },
 			};
 		}
 
 		const { success, message } = await updateTeams(updatedTeams);
 
 		if (!success) {
-			return { abortStopEditing: true, saveStatus: { success, message } };
+			return {
+				abortStopEditing: true,
+				saveStatus: { status: "danger", message },
+			};
 		}
 
 		const updatedTeamId = getTeamId(updatedTeamName);
@@ -121,7 +124,10 @@ const TeamPage = ({ organization, updateTeams }) => {
 		setEditingTeamName("");
 		setEditingMembers([]);
 		setIsDirty(false);
-		return { abortStopEditing: false, saveStatus: { success, message } };
+		return {
+			abortStopEditing: false,
+			saveStatus: { status: "success", message },
+		};
 	};
 
 	const onTeamNameChanged = (e) => {
