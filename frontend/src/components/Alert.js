@@ -1,10 +1,16 @@
 import React from "react";
 import { classNames } from "../utils";
 
+export const alertType = {
+	SUCCESS: "success",
+	DANGER: "danger",
+	WARNING: "warning",
+};
+
 const alertStyles = {
-	success: "text-green-800 bg-green-50",
-	danger: "text-red-800 bg-red-50",
-	warning: "text-yellow-800 bg-yellow-50",
+	[alertType.SUCCESS]: "text-green-800 bg-green-50",
+	[alertType.DANGER]: "text-red-800 bg-red-50",
+	[alertType.WARNING]: "text-yellow-800 bg-yellow-50",
 };
 
 const Alert = ({ type, children }) => {

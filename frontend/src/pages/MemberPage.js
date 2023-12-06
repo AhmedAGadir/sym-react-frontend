@@ -5,6 +5,7 @@ import EditableContainer from "../components/EditableContainer";
 import { AvatarPlaceHolderIcon } from "../components/Icons";
 import { getMemberValidationErrors } from "../validation";
 import { Input } from "../components/Input";
+import { alertType } from "../components/Alert";
 
 const MemberPage = ({ organization, updateTeams }) => {
 	const { teamId, memberId } = useParams();
@@ -60,7 +61,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 		if (validationErrors.length > 0) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { status: "warning", message: validationErrors },
+				saveStatus: { status: alertType.WARNING, message: validationErrors },
 			};
 		}
 
@@ -69,7 +70,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 		if (!success) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { status: "danger", message },
+				saveStatus: { status: alertType.DANGER, message },
 			};
 		}
 
@@ -84,7 +85,7 @@ const MemberPage = ({ organization, updateTeams }) => {
 		setEditingMember(null);
 		return {
 			abortStopEditing: false,
-			saveStatus: { status: "success", message },
+			saveStatus: { status: alertType.SUCCESS, message },
 		};
 	};
 

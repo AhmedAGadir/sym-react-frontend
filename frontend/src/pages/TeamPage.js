@@ -8,6 +8,7 @@ import EditableContainer from "../components/EditableContainer";
 
 import { getTeamValidationErrors } from "../validation";
 import { capitalize, classNames, getMemberId, getTeamId } from "../utils";
+import { alertType } from "../components/Alert";
 
 const ROLES = {
 	TEAM_LEAD: "Team Lead",
@@ -103,7 +104,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 		if (validationErrors.length > 0) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { status: "warning", message: validationErrors },
+				saveStatus: { status: alertType.WARNING, message: validationErrors },
 			};
 		}
 
@@ -112,7 +113,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 		if (!success) {
 			return {
 				abortStopEditing: true,
-				saveStatus: { status: "danger", message },
+				saveStatus: { status: alertType.DANGER, message },
 			};
 		}
 
@@ -126,7 +127,7 @@ const TeamPage = ({ organization, updateTeams }) => {
 		setIsDirty(false);
 		return {
 			abortStopEditing: false,
-			saveStatus: { status: "success", message },
+			saveStatus: { status: alertType.SUCCESS, message },
 		};
 	};
 
